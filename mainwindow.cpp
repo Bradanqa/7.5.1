@@ -10,13 +10,12 @@ MainWindow::MainWindow(QWidget *parent)
     timerState = TimerState::Stopped;
     stoptimer = new Stoptimer;
     lapCounter = 0;
+    lapTime = 0;
 
     InitUi();
 
+    connect(stoptimer->GetTimer(), &QTimer::timeout, this, &MainWindow::UpdateTimer);
     connect(ui->pb_clear, &QPushButton::released, this, &MainWindow::on_pb_clear_released);
-
-    std::thread thread1 = std::thread(&MainWindow::Routine, this);
-    thread1.detach();
 }
 
 MainWindow::~MainWindow()
@@ -49,32 +48,36 @@ void MainWindow::on_pb_clear_released()
     }
 
     lapCounter = 0;
+    lapTime = 0;
+
     ui->l_timeLabel->setText(defaultTimerValue);
     ui->tb_timingField->clear();
+
+    stoptimer->ResetTimer();
 }
 
 
 void MainWindow::on_pb_lap_clicked()
 {
+    if (stoptimer->GetTimerValue() == 0) {
+        return;
+    }
+
     std::stringstream result;
     result << "Lap: "
            << ++lapCounter
-           << " Time: "
-           << ui->l_timeLabel->text().toStdString();
-    ui->tb_timingField->append(QtPrivate::convertToQString(result.str()));
+           << " Time: ";
+
+    ui->tb_timingField->append(
+                QtPrivate::convertToQString(result.str())
+                + ConvertToQStr(stoptimer->GetTimerValue() - lapTime));
+
+    lapTime = stoptimer->GetTimerValue();
 }
 
-void MainWindow::Routine()
+void MainWindow::UpdateTimer()
 {
-    while (true)
-    {
-        while (timerState == TimerState::Started)
-        {
-            ui->l_timeLabel->setText(QString(stoptimer->GetTimerValue()));
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        }
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    }
+    ui->l_timeLabel->setText(ConvertToQStr(stoptimer->GetTimerValue()));
 }
 
 
@@ -91,4 +94,12 @@ void MainWindow::InitUi()
 
 }
 
+QString MainWindow::ConvertToQStr(const unsigned long& ms)
+{
+    unsigned long min = (ms % 3600000) / 60000;
+    unsigned long sec = (ms % 60000) / 1000;
+    unsigned long milli = ms % 1000;
+
+    return QString("Time %1:%2:%3").arg(min).arg(sec).arg(milli);
+}
 

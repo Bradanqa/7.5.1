@@ -27,23 +27,25 @@ public:
 
 private slots:
     void on_pb_startStop_clicked();
-
     void on_pb_clear_released();
-
     void on_pb_lap_clicked();
+    void UpdateTimer();
 
 private:
     Ui::MainWindow *ui;
 
     TimerState timerState;
-    Stoptimer* stoptimer;
+    Stoptimer* stoptimer = nullptr;
 
     size_t lapCounter;
+    unsigned long lapTime;
 
-    QString defaultTimerValue ="00:00:00";
+    QString defaultTimerValue ="0:0:0";
 
     void InitUi();
     void Routine();
+    QString ConvertToQStr(const unsigned long& ms);
+
 };
 
 #endif // MAINWINDOW_H

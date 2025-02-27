@@ -10,14 +10,17 @@ class Stoptimer
 public:
     Stoptimer();
 
-    QString GetTimerValue();
+    QTimer* GetTimer();
+    unsigned long GetTimerValue();
     void StartTimer();
     void StopTimer();
+    void ResetTimer();
 
 protected:
     QTimer* timer = nullptr;
-    std::chrono::milliseconds totalMs;
-    std::chrono::steady_clock::time_point startTime;
+
+    unsigned long totalMs;
+    int baseTimerOffset = 10;
 };
 
 #endif // STOPTIMER_H

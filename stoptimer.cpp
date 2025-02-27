@@ -3,29 +3,28 @@
 Stoptimer::Stoptimer()
 {
     timer = new QTimer();
+    totalMs = 0;
 }
 
-QString Stoptimer::GetTimerValue()
+QTimer* Stoptimer::GetTimer()
 {
-    auto currentTime = std::chrono::steady_clock::now();
-    auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime);
-    auto total_sec = std::chrono::duration_cast<std::chrono::seconds>(elapsedTime).count();
+    return timer;
+}
 
-    int min = total_sec / 60;
-    int sec = total_sec % 60;
-    int milli = elapsedTime.count() % 1000;
+unsigned long Stoptimer::GetTimerValue()
+{
+    if (timer->isActive())
+    {
+        totalMs += baseTimerOffset;
+    }
 
-    return QString("Time %1:%2:%3")
-            .arg(min)
-            .arg(sec)
-            .arg(milli);
+    return totalMs;
 }
 
 
 void Stoptimer::StartTimer()
 {
-    timer->start();
-    startTime = std::chrono::steady_clock::now();
+    timer->start(baseTimerOffset);
 }
 
 void Stoptimer::StopTimer()
@@ -33,3 +32,8 @@ void Stoptimer::StopTimer()
     timer->stop();
 }
 
+void Stoptimer::ResetTimer()
+{
+    timer->stop();
+    totalMs = 0;
+}
