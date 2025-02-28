@@ -11,7 +11,7 @@ public:
     Stoptimer();
 
     QTimer* GetTimer();
-    unsigned long GetTimerValue();
+    uint32_t GetTimerValue();
     void StartTimer();
     void StopTimer();
     void ResetTimer();
@@ -19,8 +19,8 @@ public:
 protected:
     QTimer* timer = nullptr;
 
-    unsigned long totalMs;
-    int baseTimerOffset = 10;
+    uint32_t totalMs;
+    uint32_t baseTimerOffset = 10;
 };
 
 #endif // STOPTIMER_H

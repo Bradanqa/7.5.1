@@ -31,22 +31,20 @@ void MainWindow::on_pb_startStop_clicked()
         ui->pb_startStop->setText(QString("Stop"));
         timerState = TimerState::Started;
         stoptimer->StartTimer();
+        ui->pb_lap->setEnabled(true);
     }
     else if (timerState == TimerState::Started)
     {
         ui->pb_startStop->setText(QString("Start"));
         timerState = TimerState::Stopped;
         stoptimer->StopTimer();
+        ui->pb_lap->setEnabled(false);
     }
 }
 
 
 void MainWindow::on_pb_clear_released()
 {
-    if (timerState == TimerState::Started) {
-        on_pb_startStop_clicked();
-    }
-
     lapCounter = 0;
     lapTime = 0;
 
@@ -91,10 +89,11 @@ void MainWindow::InitUi()
     ui->pb_startStop->setText(QString("Start"));
     ui->pb_clear->setText(QString("Clear"));
     ui->pb_lap->setText(QString("Lap"));
+    ui->pb_lap->setEnabled(false);
 
 }
 
-QString MainWindow::ConvertToQStr(const unsigned long& ms)
+QString MainWindow::ConvertToQStr(const uint32_t& ms)
 {
     unsigned long min = (ms % 3600000) / 60000;
     unsigned long sec = (ms % 60000) / 1000;

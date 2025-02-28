@@ -38,13 +38,13 @@ private:
     Stoptimer* stoptimer = nullptr;
 
     size_t lapCounter;
-    unsigned long lapTime;
+    uint32_t lapTime;
 
     QString defaultTimerValue ="0:0:0";
 
     void InitUi();
     void Routine();
-    QString ConvertToQStr(const unsigned long& ms);
+    QString ConvertToQStr(const uint32_t& ms);
 
 };
 

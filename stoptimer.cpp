@@ -11,7 +11,7 @@ QTimer* Stoptimer::GetTimer()
     return timer;
 }
 
-unsigned long Stoptimer::GetTimerValue()
+uint32_t Stoptimer::GetTimerValue()
 {
     if (timer->isActive())
     {
@@ -34,6 +34,5 @@ void Stoptimer::StopTimer()
 
 void Stoptimer::ResetTimer()
 {
-    timer->stop();
     totalMs = 0;
 }
